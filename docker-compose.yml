@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  rag-knowledge-base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-knowledge-base
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    volumes:
+      - ./models:/app/models
+    environment:
+      - TZ=Asia/Shanghai
+      - OLLAMA_HOST=http://ollama:11434
+    restart: unless-stopped
+    networks:
+      - rag-network
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-service
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - rag-network
+
+volumes:
+  ollama_data:
+    driver: local
+
+networks:
+  rag-network:
+    driver: bridge

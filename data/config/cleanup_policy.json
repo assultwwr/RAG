@@ -1,0 +1,4 @@
+{
+  "file_retention_days": 90,
+  "session_retention_days": 30
+}
